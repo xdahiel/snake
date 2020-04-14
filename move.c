@@ -49,13 +49,14 @@ void snake_forward_move(snake s, int dir)
 			case 'D': ++x1; break;
         }
 
-        while (p->next) {
+        while (p) {
             x2 = p->x, y2 = p->y;
             p->x = x1, p->y = y1;
             x1 = x2, y1 = y2;
             p = p->next;
         }
-
+        
+        while (p->next) p = p->next;
         p->next = k;
         k->x = x1, k->y = y1, k->next = NULL;
 
