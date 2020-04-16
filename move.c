@@ -21,74 +21,36 @@ void gotoxy(int x, int y)
 ****************************************************/
 void snake_forward_move(snake s, int dir)
 {
-    if(is_eat_food(s)) {
-		int x1, x2, y1, y2;
-		snake p;
-        snake k = (snake)malloc(sizeof(SNAKE));
-/*
-		p = s;
-		while (p->next) p = p->next;
-        gotoxy(p->x, p->y);
-        printf(" ");
-        p = s;
-*/
+    int x1, y1, x2, y2;
+    snake p = s, q;
+    x1 = p->x, y1 = p->y;
+    switch(dir) {
+        case 'W': --y1; break;
+        case 'S': ++y1; break;
+        case 'A': --x1; break;
+        case 'D': ++x1; break;
+    }
+    while (p) {
+        q = p;
+        x2 = p->x, y2 = p->y;
+        p->x = x1, p->y = y1;
+        x1 = x2, y1 = y2;
+        p = p->next;
+    }
+    if (is_eat_food(s)) {
         ++game_score;
-        gotoxy(fd.x, fd.y);
-        printf(" ");
-
         gotoxy(77, 10);
         printf("%d", game_score);
-
-        p = s;
-        x1 = s->x, y1 = s->y;
-
-        switch(dir) {
-			case 'W': --y1; break;
-			case 'S': ++y1; break;
-			case 'A': --x1; break;
-			case 'D': ++x1; break;
-        }
-
-        while (p) {
-            x2 = p->x, y2 = p->y;
-            p->x = x1, p->y = y1;
-            x1 = x2, y1 = y2;
-            p = p->next;
-        }
-        
-        while (p->next) p = p->next;
-        p->next = k;
+        snake k = (snake)malloc(sizeof(SNAKE));
+        q->next = k;
         k->x = x1, k->y = y1, k->next = NULL;
-
-        print_snake(s);
         food_generate(s);
-    } else {
-		int x1, x2, y1, y2;
-        snake p;
-
-        p = s;
-        while (p->next) p = p->next;
-        gotoxy(p->x, p->y);
-        printf(" ");
-        p = s;
-
-        x1 = s->x, y1 = s->y;
-        switch(dir) {
-			case 'W': --y1; break;
-			case 'S': ++y1; break;
-			case 'A': --x1; break;
-			case 'D': ++x1; break;
-        }
-
-        while (p) {
-            x2 = p->x, y2 = p->y;
-            p->x = x1, p->y = y1;
-            x1 = x2, y1 = y2;
-            p = p->next;
-        }
-
-        print_snake(s);
     }
+    else {
+        gotoxy(x1, y1);
+        printf(" ");
+    }
+    print_snake(s, dir);
 }
 
 /****************************************************
